@@ -9,7 +9,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Unzip
-        run: mkdir proj && unzip -q kelid-sim.zip -d proj
+        run: |
+          mkdir proj
+          [ -f "kelid-sim.zip" ] && unzip -qo "kelid-sim.zip" -d proj
+          for n in $(seq 1 30); do
+            [ -f "kelid-sim ($n).zip" ] && unzip -qo "kelid-sim ($n).zip" -d proj
+          done
+          grep -c "dispatchGesture" proj/app/src/main/java/com/kelidsim/ClickService.kt || true
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
